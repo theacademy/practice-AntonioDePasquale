@@ -1,22 +1,96 @@
+# Antonio De Pasquale, 05/09/2024
 from enum import Enum, auto
 
 # implement the classes listed below 
 class FoodItem:
-    def __init__(self, foodName, allergen, price):
+    def __init__(self, foodName, allergen, price, size):
         self.foodName = foodName
         self.allergen = allergen
         self.price = price
+        self.size = size
+
+    def changeSize(self):
+        print("\nCustomise your item")
+        # Allow user to change the size
+        newSize = input(f"Current size is '{self.size}'. Choose new size (Small, Medium, Large) or press any other key to keep current size: ").strip().capitalize()
+
+        if newSize in ["Small", "Medium", "Large"]:
+            self.size = newSize
+            print(f"Food size has been changed to '{self.size}\n'.")
+
+            if self.size == "Large":
+                self.price += 1
+
+            elif self.size == "Small":
+                self.price -= 1
+
+        else:
+            print("Size remains unchanged.\n")
 
     def __str__(self):
         return f"Food Item: {self.foodName}, Allergen: {self.allergen}"
 
 class Burger(FoodItem):
     def __init__(self, foodName, allergen, size, meatType, price, condiments):
-        super().__init__(foodName, allergen, price)
+        super().__init__(foodName, allergen, price, size)
         self.meatType = meatType
         self.size = size
         self.price = price
         self.condiments = condiments
+
+    def displayBurger(self):
+        print(f"\nBurger: {self.foodName}")
+        print(f"Patty: {self.meatType}")
+        print(f"Size: {self.size}")
+        print(f"Price: £{self.price}")
+        print(f"Ingredients and condiments: {', '.join(self.condiments)}")
+        print(f"Allergens: {', '.join(self.allergen)}\n")
+
+    def customise(self):
+        potentialIngredients = ["Lettuce", "Tomato", "Onions", "Pickles", "Cheese slice", "Mayonnaise", "Ketchup", "Mustard"]
+
+        # Allow user to change the condiments
+        changeCondiments = input("\nWould you like to add or remove ingredients? (y/n): ").strip().lower()
+        print("\nCurrent ingredients:", ", ".join(self.condiments))
+
+        if changeCondiments in ["yes", "y"]:
+            # Remove condiments
+            finishedRemoving = False  # Continue removing ingredients until the user types 'done' or the list is empty
+            finishedAdding = False  # Continue adding ingredients until the user types 'done' or the list is empty
+
+            while finishedRemoving == False:
+                print("\nCurrent ingredients:", ", ".join(self.condiments))
+                removeCondiment = input("Enter the ingredient you want to remove or type 'done' to stop removing: ").strip().capitalize()
+
+                if removeCondiment == "Done":
+                    print("Finished removing ingredients.")
+                    finishedRemoving = True  # Exit loop when the user types 'done'
+
+                elif removeCondiment in self.condiments:
+                    self.condiments.remove(removeCondiment)
+                    print(f"{removeCondiment} has been removed.")
+
+                else:
+                    print(f"{removeCondiment} not found in ingredients.")
+
+                # Add condiments
+                while finishedAdding == False:  # Continue adding ingredients until the user types 'done' or the list is empty
+                    # Show available ingredients that can be added (excluding ones already in the burger)
+                    available_to_add = [ingredient for ingredient in potentialIngredients if ingredient not in self.condiments]
+                    print("\nIngredients you can add:", ", ".join(available_to_add))
+
+                    addCondiment = input("Enter an ingredient you want to add or type 'done' to stop adding: ").strip().capitalize()
+
+                    if addCondiment == "Done":
+                        print("Finished adding ingredients.")
+                        finishedAdding = True  # Exit loop when the user types 'done'
+
+                    elif addCondiment in available_to_add:
+                        self.condiments.append(addCondiment)
+                        print(f"{addCondiment} has been added.")
+                    else:
+                        print(f"{addCondiment} already in the burger or not available to add.")
+
 
     def __str__(self):
         return (f"Burger: {self.foodName}, Allergen: {self.allergen}, Size: {self.size}, "
@@ -24,10 +98,28 @@ class Burger(FoodItem):
 
 class Drink(FoodItem):
     def __init__(self, foodName, allergen, size, beverageType, price):
-        super().__init__(foodName, allergen, price)
+        super().__init__(foodName, allergen, price, size)
         self.size = size
         self.beverageType = beverageType
         self.price = price
+        
+    def customise(self):
+
+        newType = input(f"Would you like to make your drink diet or regular").strip().capitalize()
+
+        if newType in ["Regular", "Diet"]:
+            self.beverageType = newType
+            print(f"Drink type has been changed to '{self.beverageType}\n'.")
+
+        else:
+            print("Drink type remains unchanged.\n")
+
+    def displayDrink(self):
+        print(f"\nDrink: {self.foodName}")
+        print(f"Drink Type: {self.beverageType}")
+        print(f"Size: {self.size}")
+        print(f"Price: £{self.price}")
+        print(f"Allergens: {', '.join(self.allergen)}\n")
 
     def __str__(self):
         return (f"Drink: {self.foodName}, Allergen: {self.allergen}, Size: {self.size}, "
@@ -36,10 +128,17 @@ class Drink(FoodItem):
         
 class Side(FoodItem):
     def __init__(self, foodName, allergen, size, sideType, price):
-        super().__init__(foodName, allergen, price)
+        super().__init__(foodName, allergen, price, size)
         self.size = size
         self.sideType = sideType
         self.price = price
+
+    def displaySide(self):
+        print(f"\nSide: {self.foodName}")
+        print(f"Side Type: {self.sideType}")
+        print(f"Size: {self.size}")
+        print(f"Price: £{self.price}")
+        print(f"Allergens: {', '.join(self.allergen)}\n")
 
     def __str__(self):
         return (f"Side: {self.foodName}, Allergen: {self.allergen}, Size: {self.size}, "
@@ -47,13 +146,41 @@ class Side(FoodItem):
 
 class Combo(FoodItem):
     def __init__(self, foodName, allergen, size, comboType, price, burger, side, drink):
-        super().__init__(foodName, allergen, price)
+        super().__init__(foodName, allergen, price, size)
         self.comboSize = size
         self.comboType = comboType
         self.price = price
         self.burger = burger
         self.side = side
         self.drink = drink
+
+
+    def changeSize(self):
+        print("\nCustomise your item")
+        # Allow user to change the size
+        newSize = input(f"Current size is '{self.size}'. Choose new size (Small, Medium, Large) or press any other key to keep current size: ").strip().capitalize()
+
+        if newSize in ["Small", "Medium", "Large"]:
+            self.size = newSize
+            print(f"Food size has been changed to '{self.size}\n'.")
+
+            if self.size == "Large":
+                self.price += 2.50
+
+            elif self.size == "Small":
+                self.price -= 2.50
+
+        else:
+            print("Size remains unchanged.\n")
+
+    def display(self):
+        print(f"\nCombo name: {self.foodName}")
+        print(f"\nBurger: {self.burger.foodName}")
+        print(f"\nDrink: {self.drink.foodName}")
+        print(f"\nSide: {self.side.foodName}")
+        print(f"Size: {self.size}")
+        print(f"Price: £{self.price}")
+        print(f"Allergens: {', '.join(self.allergen)}\n")
 
     def __str__(self):
         return (f"Combo: {self.foodName}, Allergen: {self.allergen}, Size: {self.comboSize}, "
@@ -81,33 +208,166 @@ class Order:
 
 
 def user_input_burger():
-    b = Burger()
     #ask user for input and store it in burger object 
-    return b
+    burgerFinished = False
+    burger = None
+
+    while burgerFinished == False:
+        print("\nBurger options")
+        print("1) The Chicken zinger")
+        print("2) The Big Beefy")
+        print("3) The Veggie stack")
+
+        userItemChoice = input("Please choose an item from the menu (1-3): \n").strip()
+
+        if userItemChoice == "1":
+            burger = Burger("The Chicken zinger", ["Gluten", "Dairy"], "Medium", "Chicken", 8.99, ["Lettuce", "Cheese slice", "Mayonaise"])
+            
+        elif userItemChoice == "2":
+            burger = Burger("The Big Beefy", ["Gluten"], "medium", "beef", 9.99, ["Lettuce", "Tomatoe", "Ketchup", "Mustard"])
+            
+        elif userItemChoice == "3":
+            burger = Burger("The Veggie stack", ["Gluten"], "medium", "veggie", 7.99, ["Lettuce", "Onions", "Pickles"])
+
+        else:
+            print("Please choose a valid burger from the menu (1-3).")
+            continue
+
+        print("You chose:")
+        burger.displayBurger()
+
+        confirmBurger = input("Do you want to customise this burger? (y/n): ").strip().lower()
+
+        if confirmBurger in ["yes", "y"]:
+            burger.changeSize()
+            burger.customise()  # Call the customise function to allow user to make changes
+            burger.displayBurger()
+            burgerFinished = True
+
+        else:
+            print(f"{burger.foodName} has been added to your order.")
+
+    return burger  # Return the burger object
  
 def user_input_drink():
-    d = Drink()
     #ask user for input and store it in drink object 
-    return d
+    drinkFinished = False
+    drink = None
+
+    while drinkFinished == False:
+        print("\nDrink options")
+        print("1) Coke")
+        print("2) Pepsi")
+        print("3) Lemonade")
+        print("4) Fanta")
+
+        userItemChoice = input("Please choose an item from the menu (1-4): \n").strip()
+
+        if userItemChoice == "1":
+            drink = Drink("Coke", ["Gluten"], "medium", "regular", 1.99)
+            
+        elif userItemChoice == "2":
+            drink = Drink("Pepsi", ["Gluten"], "medium", "regular", 1.99)
+            
+        elif userItemChoice == "3":
+            drink = Drink("Lemonade", ["Gluten"], "medium", "regular", 1.40)
+
+        elif userItemChoice == "4":
+            drink = Drink("Fanta", ["Gluten"], "medium", "regular", 1.99)
+
+        else:
+            print("Please choose a valid drink from the menu (1-4).")
+            continue
+
+        print("You chose:")
+        drink.displayDrink()
+
+        confirmDrink = input("Do you want to customise this Drink? (y/n): ").strip().lower()
+
+        
+        if confirmDrink in ["yes", "y"]:
+            drink.changeSize()  # Call the changesize function to allow user to make changes
+            drink.customise()  # Call the customise function to allow user to make changes
+            drinkFinished = True
+
+        else:
+            print(f"{drink.foodName} has been added to your order.")
+
+    return drink  # Return the burger object
  
 def user_input_side():
-    s = Side()
-    #ask user for input and store it in side object 
-    return s
+    def user_input_drink():
+        #ask user for input and store it in drink object 
+        sideFinished = False
+        side = None
+
+        while sideFinished == False:
+            print("\nSide options")
+            print("1) Regular Fries")
+            print("2) Veggie Fries")
+            print("3) Onion Rings")
+            print("4) Hot Wings")
+            print("5) Ice Cream")
+
+            userItemChoice = input("Please choose an item from the menu (1-5): \n").strip()
+
+            if userItemChoice == "1":
+                side = Side("Regular Fries", ["Gluten"], "medium", "regular", 1.99)
+
+            elif userItemChoice == "2":
+                side = Side("Veggie Fries", ["Gluten"], "medium", "vegan", 2.99)
+
+            elif userItemChoice == "3":
+                side = Side("Onion Rings", ["Gluten"], "medium", "vegan", 2.49)
+
+            elif userItemChoice == "4":
+                side = Side("Hot Wings", ["Gluten"], "medium", "regular", 2.99)
+
+            elif userItemChoice == "5":
+                side = Side("Ice Cream", ["Gluten"], "medium", "regular", 2.99)
+
+            else:
+                print("Please choose a valid side from the menu (1-5).")
+                continue
+
+            print("You chose:")
+            side.displaySide()
+
+            confirmDrink = input("Do you want to customise this Drink? (y/n): ").strip().lower()
+
+            
+            if confirmDrink in ["yes", "y"]:
+                side.changeSize()  # Call the changesize function to allow user to make changes
+                side.customise()  # Call the customise function to allow user to make changes
+                drinkFinished = True
+
+            else:
+                print(f"{drink.foodName} has been added to your order.")
+
+        return drink  # Return the burger object
+
+    #def __init__(self, foodName, allergen, size, sideType, price)
+        #newSide = Side("Regular Fries", "vegan", "medium", "fries", 3.99)
  
-def user_input_combo():
-    c = Combo()
-    #ask user for input and store it in combo object 
+#def user_input_combo():
+#    #ask user for input and store it in combo object 
     #a combo must include one burger, one side, and one drink
-    return c
+    #return c
  
 def take_order():
     print("\nWelcome to Burger Shop\n")
     #ask user for name for the order 
     hasUserOrdered = False
 
-    userInput = input("Enter your name to make an Order: \n\n").strip()
-    userOrder = Order(userInput)
+    while True:
+        userInput = input("Enter your name to make an Order: \n\n").strip()
+
+        if userInput:
+            userOrder = Order(userInput)
+            break
+
+        else:
+            ("Please enter a name, input cannot be empty")
 
     #repeat taking order until client is done 
     while hasUserOrdered == False:
@@ -116,33 +376,39 @@ def take_order():
         print("2) Add a Side")
         print("3) Add a Drink")
         print("4) Add a Combo")
-        print("5) Add a Finish Order (you wont be able to add anymore items)\n")
+        print("5) Finish or view your Order\n")
 
         userItemChoice = input("Please choose an item from the menu (1-5): \n").strip()
 
         if userItemChoice == "1":
-            newBurger = user_input_burger
-            #userOrder.addToOrder(newBurger)
-            userOrder.addToOrder("newBurger")
+            newBurger = user_input_burger()
+            userOrder.addToOrder(newBurger)
 
         elif userItemChoice == "2":
-            newSide = user_input_side
+            #newSide = user_input_side
             #userOrder.addToOrder(newSide)
             userOrder.addToOrder("newSide")
 
         elif userItemChoice == "3":
-            newDrink = user_input_drink
+            #newDrink = user_input_drink
             #userOrder.addToOrder(newDrink)
             userOrder.addToOrder("newDrink")
 
         elif userItemChoice == "4":
-            newCombo = user_input_combo
+            #newCombo = user_input_combo
             #userOrder.addToOrder(newCombo)
             userOrder.addToOrder("newCombo")
 
         elif userItemChoice == "5":
             print("\nTake a look at your order\n")
-            hasUserOrdered = True
+            userOrder.displayOrder()
+            confirmOrderFinished = input("\nDo you want to confirm this order (the order cannot be changed after this)\n").strip().lower()
+
+            if confirmOrderFinished in ["yes, y"]:
+                hasUserOrdered = True
+
+            else:
+                break
 
         else:
             print("please enter a valid menu number\n")
@@ -150,7 +416,7 @@ def take_order():
     #display order 
     userOrder.displayOrder()
 
-    #display a thank you messageBi
+    #display a thank you message
     print("\nThank you for eating with us!\n")
  
 take_order()
