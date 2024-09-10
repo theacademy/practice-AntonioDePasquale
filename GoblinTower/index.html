@@ -4,12 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .character-card {
+            border: 1px solid black;
+            padding: 2%;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <p id="heroName"></p>
-        <button id="heroNameButton">Choose your hero name!</button>
+    <div class="character-card">
+        <h2>Character Stats</h2>
+        <h3>Your Hero, <span class="name">heroName</span>!</h3>
+        <ul>
+            <li>Level: <span class="level">0</span></li>
+            <li>Steps: <span id="stepCounter">0</span></li>
+            <li>Health: <span class="health">100</span>/<span class="maxHealth">100</span></li>
+            <li>Gold: <span class="gold">0</span></li>
+            <li>Potions: <span class="potions">1</span>/<span class="maxPotions">5</span></li>
+            <li>Strength: <span class="strength">0</span></li>
+            <li>Defence: <span class="defence">0</span></li>
+        </ul>
+
     </div>
+    <div class="step-button-div">
+        <button id="takeStepButton">Move your hero!</button>
+    </div>
+
+    <div class="drink-button-div">
+        <button id="drinkPotionButton" style="display: none;">Drink potion!</button>
+    </div>
+    <script src="app.js"></script>
 </body>
-<script src="app.js"></script>
 </html>
+
