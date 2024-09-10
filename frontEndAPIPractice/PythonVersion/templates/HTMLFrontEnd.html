@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Our Funky HTML Page</title>
+<meta name="description" content="Our first page">
+<meta name="keywords" content="html tutorial template">
+</head>
+ 
+<body>
+    {% for d in data %}
+    <li>{{ d.title }} ({{ d.releaseYear }}) - Directed by {{ d.director }} - Rating: {{ d.rating }}</li>
+    {% endfor %}
+</body>
+ 
+</html>
