@@ -4,35 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .character-card {
-            border: 1px solid black;
-            padding: 2%;
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div class="character-card">
-        <h2>Character Stats</h2>
-        <h3>Your Hero, <span class="name">heroName</span>!</h3>
-        <ul>
-            <li>Level: <span class="level">0</span></li>
-            <li>Steps: <span id="stepCounter">0</span></li>
-            <li>Health: <span class="health">100</span>/<span class="maxHealth">100</span></li>
-            <li>Gold: <span class="gold">0</span></li>
-            <li>Potions: <span class="potions">1</span>/<span class="maxPotions">5</span></li>
-            <li>Strength: <span class="strength">0</span></li>
-            <li>Defence: <span class="defence">0</span></li>
-        </ul>
-
+    <div class="game-container">
+        <div class="character-card">
+            <h2>Character Stats</h2>
+            <h3>Your Hero, <span class="name">heroName</span>!</h3>
+            <img src="images/heroImage.png" class="character-image">
+            <ul>
+                <li>Level: <span class="level">0</span></li>
+                <li>Steps: <span id="stepCounter">0</span></li>
+                <li>Health: <span class="health">100</span>/<span class="maxHealth">100</span></li>
+                <li>Gold: <span class="gold">0</span></li>
+                <li>Potions: <span class="potions">1</span>/<span class="maxPotions">5</span></li>
+                <li>Luck: <span class="luck">0</span></li>
+                <li>Defence: <span class="defence">0</span></li>
+            </ul>
+        </div>
+        <div class="shop-buttons">
+            <div class="step-button-div">
+                <button id="takeStepButton">Move your hero!</button>
+            </div>
+            <div class="drink-button-div">
+                <button id="drinkPotionButton" style="display: none;">Drink potion!</button>
+            </div>
+            <div class="shop-button-div">
+                <!-- <button id="goToShop" style="display: none;">Ye Ol Shop!</button> -->
+                <button id="goToShopButton"style="display: none;">Ye Ol Shop!</button>
+            </div>
+            <div class="buy-sword-button-div">
+                <button id="buySwordButton"style="display: none;">Buy Sword</button>
+            </div>
+            <div class="buy-potion-button-div">
+                <button id="buyPotionButton" style="display: none;">Buy Potion (cost: 3 gold)</button>
+            </div>
+            <div class="buy-shield-button-div">
+                <button id="buyShieldButton"style="display: none;">Buy Shield</button>
+            </div>
+            <div class="leave-shop-menu-button-div">
+                <button id="leaveShopMenuButton" style="display: none;">Leave Shop</button>
+            </div>
+        </div>
     </div>
-    <div class="step-button-div">
-        <button id="takeStepButton">Move your hero!</button>
-    </div>
-
-    <div class="drink-button-div">
-        <button id="drinkPotionButton" style="display: none;">Drink potion!</button>
-    </div>
+    <div class="info-card" style="overflow-y: scroll; height:300px;">
+        <h2> Game Board </h2>
+        <p id="gameBoardInfo"></p>
+    </div> 
+    <div id="gameOverScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: black; color: red; text-align: center; padding-top: 20%; font-family: 'serif'; font-size: 2em;">
+        <p id="deathMessage">You have died</p>
+        <p id="finalMessage">Would you like to restart?</p>
+        <button id="yesRestartButton">Yes?</button>
+        <button id="noRestartButton">No?</button>
+        <div id="finalStats" style="display: none;">
+            <p>Final stats</p>
+            <p>Steps taken: <span id="finalSteps"></span></p>
+            <p>Goblins encountered: <span id="finalGoblins"></span></p>
+            <p>Gold left to heirs: <span id="finalGold"></span></p>
+        </div>
+    <!-- <div class="goblin-container">
+        <img src="goblin.jpg" alt="Goblin" class="goblin">-->
+    </div> 
     <script src="app.js"></script>
 </body>
 </html>
