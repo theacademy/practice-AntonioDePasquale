@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch JSON Data</title>
+</head>
+<body>
+    <h2>Add a New Contact</h1>
+    <form id="addContactForm">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" required>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <button type="submit">Add Contact</button>
+    </form>
+
+    <h2>Contact List Table</h2>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Contact ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>company</th>
+                <th>Phone</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be inserted here -->
+        </tbody>
+    </table>
+ 
+    <script src="app.js"></script>
+</body>
+</html>
