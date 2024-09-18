@@ -10,9 +10,10 @@ from django.utils import timezone
 class Blog(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField() # TextField does not require the max_length()
-    author = models.ForeignKey(User, on_delete=models.CASCADE) # uses the django.contrib.auth.models library for logged user
+    # author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True) # uses the django.contrib.auth.models library for logged user
+    author = models.TextField()
     date_time = models.DateTimeField(default=timezone.now)
-    attachment = models.FileField(upload_to="static/attachments/%Y/%m/%d")
+    attachment = models.FileField(upload_to="static/attachments/%Y/%m/%d", blank=True)
 
     def __str__(self):
         return f"({self.date_time}) {self.title} by {self.author}: {self.description}"

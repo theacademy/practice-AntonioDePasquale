@@ -9,4 +9,4 @@ class CommentSerializer(serializers.ModelSerializer):
 class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ('id', 'blog', 'author', 'commentAuthor', 'commentContent', 'commentDate')
+        fields = ('id', 'title', 'description', 'author', 'date_time', 'attachment')
