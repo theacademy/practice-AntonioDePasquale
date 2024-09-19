@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.content }}</p>
+        <p><strong>Date posted:</strong> {{ post.date_posted }}</p>
+
+        <hr>
+
+        <h2>Comments:</h2>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <p><strong>{{ comment.author }}:</strong> {{ comment.content }}</p>
+                    <p><em>Posted on {{ comment.date_posted }}</em></p>
+                </li>
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+        </ul>
+
+        <hr>
+
+        <h2>Leave a Comment:</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Submit Comment</button>
+        </form>
+
+        <a href="{% url 'blog_home' %}">Back to Blog Home</a>
+    </div>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Home</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Murder Mystery Blog</h1>
+        <ul>
+            {% for post in blog_posts %}
+                <li>
+                    <a href="{% url 'blog_detail' post.id %}">{{ post.title }}</a>
+                    <span>{{ post.date_posted }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'create_blog_post' %}">Create New Blog Post</a>
+    </div>
+</body>
+</html>
+

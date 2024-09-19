@@ -1,6 +1,9 @@
 # views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CommentForm
+from django.shortcuts import render, redirect
+from .models import BlogPost
+from .forms import BlogPostForm
 
 # Hard-coded blog posts
 BLOG_POSTS = [
@@ -24,29 +27,39 @@ BLOG_POSTS = [
 ]
 
 def blog_home(request):
-    return render(request, 'blog_home.html', {'blog_posts': BLOG_POSTS})
+    blog_posts = BlogPost.objects.order_by('-date_posted')
+    return render(request, 'blog_home.html', {'blog_posts': blog_posts})
 
-def blog_detail(request, blog_id):
-    blog_post = next((post for post in BLOG_POSTS if post["id"] == blog_id), None)
-    if blog_post is None:
-        return render(request, '404.html')  # Handle not found
+def create_blog_post(request):
+    if request.method == 'POST':
+        form = BlogPostForm(request.POST)
+        if form.is_valid():
+            new_post = form.save()  # Save the form and get the new blog post instance
+            return redirect('blog_detail', post_id=new_post.id)  # Redirect to the newly created post
+    else:
+        form = BlogPostForm()
+
+    return render(request, 'create_blog_post.html', {'form': form})
+
+from django.shortcuts import render, get_object_or_404
+from .models import BlogPost
+
+def blog_detail(request, post_id):
+    post = get_object_or_404(BlogPost, id=post_id)
+    comments = post.comments.all()  # Retrieve comments related to the post
 
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            # Normally save the comment, but here we'll just append it for simplicity
-            new_comment = {
-                "author": form.cleaned_data['author'],
-                "content": form.cleaned_data['content']
-            }
-            blog_post['comments'].append(new_comment)
-            return redirect('blog_detail', blog_id=blog_id)
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.blog_post = post  # Associate comment with the blog post
+            new_comment.save()
+            return redirect('blog_detail', post_id=post.id)  # Refresh the page to display the new comment
     else:
-        form = CommentForm()
+        comment_form = CommentForm()
 
     return render(request, 'blog_detail.html', {
-        'blog_post': blog_post,
-        'form': form,
-        'comments': blog_post['comments']
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form
     })
-
