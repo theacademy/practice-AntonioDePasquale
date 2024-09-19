@@ -1,32 +1,19 @@
+# models.py
 from django.db import models
 
-# Create your models here.
-from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
-
-
-# Create your models here.
 class Blog(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.TextField() # TextField does not require the max_length()
-    # author = models.ForeignKey(User, on_delete=models.CASCADE, blank=True) # uses the django.contrib.auth.models library for logged user
-    author = models.TextField()
-    date_time = models.DateTimeField(default=timezone.now)
-    attachment = models.FileField(upload_to="static/attachments/%Y/%m/%d", blank=True)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"({self.date_time}) {self.title} by {self.author}: {self.description}"
+        return self.title
 
 class Comment(models.Model):
     blog = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE)
-    commentAuthor = models.TextField()  # Make sure this matches the form
-    commentContent = models.TextField()
-    commentDate = models.DateTimeField(default=timezone.now)
+    author = models.CharField(max_length=100)
+    content = models.TextField()
+    date_posted = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Comment on ({self.commentDate}) by {self.commentAuthor}: {self.commentContent}"
-
-#TODO
-class User(models.Model):
-    pass
+        return f'Comment by {self.author}'
