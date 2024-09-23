@@ -7,10 +7,15 @@
     <title>{{ post.title }}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 </head>
-<body>
-    <div class="container">
-        <h1>{{ post.title }}</h1>
+    <body>
+        <div class="container">
+            <h1>{{ post.title }}</h1>
         <p>{{ post.content }}</p>
+
+        {% if post.attachment %}
+            <img src="{{ post.attachment.url }}" class="blog-image" alt="Blog Image">  <!-- Display image if uploaded -->
+        {% endif %}
+
         <p><strong>Date posted:</strong> {{ post.date_posted }}</p>
 
         <hr>

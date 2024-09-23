@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h1>Create a New Blog Post</h1>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">  <!-- enctype added for file upload -->
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Create Blog Post</button>
