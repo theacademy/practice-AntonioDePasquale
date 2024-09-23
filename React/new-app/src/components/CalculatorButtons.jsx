@@ -1,10 +1,12 @@
 import React from 'react';
 
 const Buttons = ({ value, onClick }) => {
-    return (
-        <button onClick={() => onClick(value)}>
-            {value}
-        </button>
+    return ( 
+        <div className="button-wrapper">
+            <button onClick={() => onClick(value)}>
+                {value}
+            </button>
+        </div>
     );
 };
 

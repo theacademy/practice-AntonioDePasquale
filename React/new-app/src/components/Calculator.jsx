@@ -20,15 +20,37 @@ const Calculator = () => {
     };
 
     return (
-        <div>
+        <div className="calculator">
             <Display input={input} />
-            <div>
-                {['1', '2', '3', '+', 'C', '4', '5', '6', '-', '=', '7', '8', '9', '*', '0', '/'].map((item) => (
-                    <Buttons key={item} value={item} onClick={handleButtonClick} />
-                ))}
+            <div className="button-container">
+                <div className="button-row">
+                    <Buttons value="7" onClick={handleButtonClick} />
+                    <Buttons value="8" onClick={handleButtonClick} />
+                    <Buttons value="9" onClick={handleButtonClick} />
+                    <Buttons value="+" onClick={handleButtonClick} />
+                </div>
+                <div className="button-row">
+                    <Buttons value="4" onClick={handleButtonClick} />
+                    <Buttons value="5" onClick={handleButtonClick} />
+                    <Buttons value="6" onClick={handleButtonClick} />
+                    <Buttons value="-" onClick={handleButtonClick} />
+                </div>
+                <div className="button-row">
+                    <Buttons value="1" onClick={handleButtonClick} />
+                    <Buttons value="2" onClick={handleButtonClick} />
+                    <Buttons value="3" onClick={handleButtonClick} />
+                    <Buttons value="*" onClick={handleButtonClick} />
+                </div>
+                <div className="button-row">
+                    <Buttons value="C" onClick={handleButtonClick} />
+                    <Buttons value="0" onClick={handleButtonClick} />
+                    <Buttons value="=" onClick={handleButtonClick} />
+                    <Buttons value="/" onClick={handleButtonClick} />
+                </div>
             </div>
         </div>
     );
 };
+
 
 export default Calculator;
