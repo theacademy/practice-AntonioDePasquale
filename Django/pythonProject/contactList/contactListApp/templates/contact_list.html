@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact List</title>
+</head>
+<body>
+    <h1>Contact List</h1>
+    <ul>
+        {% for contact in contacts %}
+        <li>{{ contact.first_name }} {{ contact.last_name }} - {{ contact.phone }} - {{ contact.email }}</li>
+        {% empty %}
+        <li>No contacts available.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'add_contact' %}">Add a new contact</a></p>
+    <p><a href="{% url 'home' %}">Back to Home</a></p>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Contact</title>
+</head>
+<body>
+    <h1>Add Contact</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- This renders the form fields -->
+        <button type="submit">Save Contact</button>
+    </form>
+    <p><a href="{% url 'contact_list' %}">View all contacts</a></p>
+    <p><a href="{% url 'home' %}">Back to Home</a></p>
+</body>
+</html>
+
