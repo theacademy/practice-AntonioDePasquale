@@ -1,4 +1,4 @@
-from django import migrations
+from django.db import migrations, models
 
 def create_crushes(apps, schema_editor):
     Crush = apps.get_model('diaryapp', 'Crush')
@@ -13,7 +13,7 @@ def create_crushes(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('diaryapp', 'previous_migration_name'),  # replace with your last migration
+        ('diaryapp', '0001_initial'),  # replace with your last migration
     ]
 
     operations = [
