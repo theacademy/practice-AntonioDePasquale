@@ -31,7 +31,7 @@ class Diary(models.Model):
         return self.entries.count()
 
     def __str__(self):
-        return self.crush  # or any other relevant field
+        return self.author  # or any other relevant field
     
 class Entry(models.Model):
     entryId = models.AutoField(primary_key=True)
