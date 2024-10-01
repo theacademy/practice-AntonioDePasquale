@@ -20,8 +20,10 @@ class UserSerializer(serializers.ModelSerializer):
 class SignInDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SignInDetail
-        fields = '__all__'
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['email']  # Include only the email field
+        extra_kwargs = {
+            'password': {'write_only': True}  # Password will not be included in the response
+        }
 
 class LockerSerializer(serializers.ModelSerializer):
     class Meta:

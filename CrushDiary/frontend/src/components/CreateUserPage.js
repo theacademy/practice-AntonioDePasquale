@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CreateUserPage = () => {
@@ -6,41 +6,54 @@ const CreateUserPage = () => {
         username: '',
         eyeColour: '',
         hairColour: '',
-        email: '',
     });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
+    useEffect(() => {
+        // Fetch the SignInDetail for the logged-in user
+        const fetchSignInDetail = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/users/'); // Adjust the URL based on your API
+                setFormData((prev) => ({ ...prev, email: response.data.email }));
+            } catch (err) {
+                console.error(err);
+                setError('Error fetching user details.');
+            }
+        };
+        fetchSignInDetail();
+    }, []);
 
-const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-        ...formData,
-        [name]: value
-    });
-};
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    };
 
-const handleSubmit = (e) => {
-    e.preventDefault();
-    // Adjust the API endpoint based on your Django backend setup
-    axios.post('http://127.0.0.1:8000/api/users/', formData)
-      .then(response => {
-        setSuccess(true);
-        setError('');
-      })
-      .catch(err => {
-        setError('Error creating user. Please try again.');
-        setSuccess(false);
-      });
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://127.0.0.1:8000/api/users/', {
+                ...formData,
+                email: formData.email // Include the email in the request body
+            });
+            setSuccess(true);
+            setError('');
+        } catch (err) {
+            setError('Error creating user. Please try again.');
+            setSuccess(false);
+        }
+    };
 
-  return (
-    <div className='create-user-page'>
-        <h1>Create User</h1>
-        {error && <div className='error'>{error}</div>}
-        {success && <div className='success'>User created successfully!</div>}
-        <form onSubmit={handleSubmit}>
+    return (
+        <div className='create-user-page'>
+            <h1>Create User</h1>
+            {error && <div className='error'>{error}</div>}
+            {success && <div className='success'>User created successfully!</div>}
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label>Username:</label>
                     <input
@@ -71,22 +84,14 @@ const handleSubmit = (e) => {
                         required
                     />
                 </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type='email'
-                        name='email'
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+                {/* No email input required */}
                 <div>
                     <button type='submit'>Create User</button>
                 </div>
             </form>
-    </div>
-  )
-}
+        </div>
+    );
+};
 
 export default CreateUserPage;
+

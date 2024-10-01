@@ -33,6 +33,7 @@ urlpatterns = [
     # path('api/', include('diaryapp.urls')), 
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),  # Include the app's URLs
+    # path('allow_any_request/', allow_any_request, name='allow_any_request'),
     # path('auth/register/', views.CreateUserAPIView.as_view({'post': 'register'}), name='auth_user_create'),
     # path('auth/login/', views.CustomObtainAuthToken.as_view(), name='auth_user_login'),
     # path('auth/logout/', views.LogoutUserAPIView.as_view(), name='auth_user_logout'),

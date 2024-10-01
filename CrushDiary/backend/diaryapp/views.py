@@ -11,6 +11,11 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import SignInDetail
+from .serializers import SignInDetailSerializer
 
 class EntryViewSet(viewsets.ModelViewSet):
     queryset = Entry.objects.all()
@@ -69,6 +74,17 @@ class CustomObtainAuthToken(ObtainAuthToken):
             'user_id': user.pk,
             'email': user.email
         })
+    
+class CurrentUserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Assuming the email is unique and matches the logged-in user
+        sign_in_detail = SignInDetail.objects.get(email=request.user.email)
+        serializer = SignInDetailSerializer(sign_in_detail)
+        return Response(serializer.data)  # This will now return only the email
+    
+
 # class EntryListCreate(APIView):
 #     def get(self, request):
 #         entries = Entry.objects.all()

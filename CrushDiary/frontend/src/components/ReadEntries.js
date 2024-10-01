@@ -6,7 +6,7 @@ const ReadEntries = () => {
 
   useEffect(() => {
     const fetchEntries = async () => {
-      const response = await axios.get('http://127.0.0.1:8000/api/diary');
+      const response = await axios.get('http://127.0.0.1:8000/api/diary/');
       setEntries(response.data);
     };
     fetchEntries();
