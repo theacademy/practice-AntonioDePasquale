@@ -1,6 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.db.models import F ############
 
 # Create your models here.
 class SignInDetail(models.Model):
@@ -20,10 +19,16 @@ class User(models.Model):
     email = models.ForeignKey(SignInDetail, on_delete=models.CASCADE)
     def __str__(self):
         return self.username
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Call the original save method
+        # Create a diary for the user
+        Diary.objects.get_or_create(userId=self)  # Automatically create a diary linked to this user
+
 
 class Diary(models.Model):
     diaryId = models.AutoField(primary_key=True)
-    author = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)  
     # crush = models.CharField(max_length=100)
     # SELECT count(entryID) FROM User u LEFT JOIN Diary d ON u.userID=d.userID, LEFT JOIN Entry e ON d.diaryID=e.diaryID 
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,16 +37,50 @@ class Diary(models.Model):
     def noOfEntries(self):
         return self.entries.count()
 
-    def __str__(self):
-        return self.author  # or any other relevant field
+    # def __str__(self):
+    #     return self.author  # or any other relevant field
+
+    def save(self, *args, **kwargs):
+        # Set the author field to the associated user's username
+        if self.userId:
+            self.author = self.userId.username
+        super().save(*args, **kwargs)  # Call the original save method
+
     
+    def __str__(self):
+        return f"{self.author}'s Diary"  # Optional: can show username for clarity
+
+class Crush(models.Model):
+    crushId = models.AutoField(primary_key=True)
+    crushName = models.CharField(max_length=100)
+    mood = models.CharField(max_length=100)
+    matchingMoodEntries = models.IntegerField(default=0)  #increments with every matching entry mood,  matchingMoodEntries%3==0 triggers memo sent
+    #crushPicture = picture = models.ImageField()
+    # diary = models.ForeignKey(Diary, on_delete=models.CASCADE, related_name='crushes')  #################################
+
+
+    def __str__(self): #################################################################
+        return self.crushName
+
+class Locker(models.Model):
+    lockerId = models.AutoField(primary_key=True)
+    diaryID = models.ForeignKey(Diary, on_delete=models.CASCADE, related_name='diary')
+    # memo = models.CharField(max_length=500)
+
+
 class Entry(models.Model):
+    MOOD_CHOICES = [   #####################################
+        ('Musical', 'Musical'),
+        ('Sporty', 'Sporty'),
+        ('Artistic', 'Artistic'),
+        ('Fashion', 'Fashion'),
+        ('Nerdy', 'Nerdy'),
+    ]
     entryId = models.AutoField(primary_key=True)
     diaryId = models.ForeignKey(Diary, on_delete=models.CASCADE, related_name='entries')
-    #user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to User
     title = models.CharField(max_length=100)
     content = models.TextField()
-    mood = models.CharField(max_length=100)
+    mood = models.CharField(max_length=100, choices=MOOD_CHOICES) #################
     createdAt = models.DateTimeField(auto_now_add=True)
     updatedAt = models.DateTimeField(auto_now=True)
     
@@ -50,13 +89,78 @@ class Entry(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        
-        # Check if the entry's mood matches any crush's mood
-        for crush in Crush.objects.all():  # All available NPCs (crushes)
-            if crush.mood == self.mood:
-                crush.increment_matching_mood_entries()
 
+        matching_crushes = Crush.objects.filter(mood=self.mood)
+        for crush in matching_crushes:
+            crush.matchingMoodEntries += 1
+            crush.save()
+
+            if (crush.matchingMoodEntries)%3==0: #################################
+                self.create_memo(crush)
+    def create_memo(self, crush):  #################################
+        # Generate a title and content for the memo based on the number of matchingMoodEntries
+        
+        diary = self.diaryId
+
+        try:
+            locker = Locker.objects.get(diaryID=self.diaryId)
+        except Locker.DoesNotExist:
+        # If no locker exists for this diary, handle it (you might want to create one, raise an error, etc.)
+            locker = Locker.objects.create(diaryID=self.diaryId)
+        
+        crushes = Crush.objects.filter(mood=self.mood)
+
+        for crush in crushes:    
+            title = None  
+            content = None  
+            if crush.matchingMoodEntries == 3:
+                title = f"A Little Compliment from {crush.crushName}"
+                content = f"Hey {self.diaryId.author},\n\nI couldn't help but notice how amazing your {self.diaryId.userId.eyeColour} eyes and {self.diaryId.userId.hairColour} hair look today. Honestly, you have this vibe that’s hard to ignore. Talk soon?\n\n- {crush.crushName}"
+            elif crush.matchingMoodEntries == 6:
+                if crush.mood == 'Sporty':
+                    title = f"An Invite from {crush.crushName}"
+                    content = f"Hey {self.diaryId.author},\n\nSo, I have a game coming up, and it'd be cool if you came to watch! I mean, no pressure, but it'd mean a lot to see you there cheering. Maybe we can hang out after?\n\nCatch you later,\n{crush.crushName}"
+                elif crush.mood == 'Musical':
+                    title = f"Come See My Band Play!"
+                    content = f"Hey {self.diaryId.author},\n\nGuess what? My band is performing this weekend, and it’d be awesome if you could come. We’ve been practicing like crazy, and seeing you in the crowd would make it even better. What do you say?\n{crush.crushName}"
+                elif crush.mood == 'Artistic':
+                    title = f"Art Show Invitation from {crush.crushName}"
+                    content = f"Hey {self.diaryId.author},\n\nI’ve got an art show coming up at school, and it’d be amazing if you could check it out. I’ve been working on some cool stuff and would love to hear what you think. Let’s hang out after?\n\n- {crush.crushName}"
+                elif crush.mood == 'Fashion':
+                    title = f"Fashion Show Invite!"
+                    content = f"Hey {self.diaryId.author},\n\nWe’re doing this charity fashion show at school, and I’m walking in it. Would be awesome if you came to watch! Maybe you could tell me what you think of my outfits?\n\nSee you there,\n{crush.crushName}"
+                elif crush.mood == 'Nerdy':
+                    title = f"Meet Me at the Tree!"
+                    content = f"Hey {self.diaryId.author},\n\nSo, I left a book in your locker. I thought you might like it. How about we meet by the big tree in the school park and read it together? It’s kinda my favorite, and I’d love to share it with you.\n\nSee you there?\n{crush.crushName}"
+            elif crush.matchingMoodEntries == 9:
+                title = f"A Question from {crush.crushName}"
+                content = (
+                    f"Dear {self.diaryId.author},\n\n"
+                    f"Roses are red, violets are blue,\n"
+                    f"I've had a secret I’ve been meaning to tell you.\n\n"
+                    f"Your smile’s like the sunshine, your laugh’s like a song,\n"
+                    f"I’ve felt this way for a while, maybe all along.\n\n"
+                    f"So here’s the question, I’m hoping you’ll say yes,\n"
+                    f"Would you be my date to prom? I think you’d look the best.\n\n"
+                    f"Yours truly,\n{crush.crushName}"
+                )
+        
+
+        # Create a new memo
+        if title and content:
+            Memo.objects.create(   #################################
+                locker=locker,
+                title=title,
+                content=content
+            )
+
+        # Link the memo to the user's locker
+        # Assuming each user has one locker
+        # locker = Locker.objects.get(diaryID=self.diaryId)
+        # locker.memo_set.add(Memo.objects.latest('id')) 
+        
     def delete(self, *args, **kwargs):
+        # No need to update diary here as noOfEntries is dynamic
         matching_crushes = Crush.objects.filter(mood=self.mood)
         for crush in matching_crushes:
             crush.matchingMoodEntries -= 1
@@ -64,92 +168,12 @@ class Entry(models.Model):
 
         super().delete(*args, **kwargs)
 
-class Locker(models.Model):
-    lockerId = models.AutoField(primary_key=True)
-    diary = models.OneToOneField(Diary, on_delete=models.CASCADE, related_name='locker')
-    # memo = models.CharField(max_length=500)
-
 class Memo(models.Model):
     memoId = models.AutoField(primary_key=True)
+    locker = models.ForeignKey(Locker, on_delete=models.CASCADE, related_name='memos')  #####################################
     title = models.CharField(max_length=500)
     content = models.TextField()
     #picture = models.ImageField()
-    locker = models.ForeignKey(Locker, on_delete=models.CASCADE, related_name='memos')
 
-    def __str__(self):
+    def __str__(self):  #################################
         return self.title
-
-class Crush(models.Model):
-    crushId = models.AutoField(primary_key=True)
-    crushName = models.CharField(max_length=100)
-    mood = models.CharField(max_length=100)
-    matchingMoodEntries = models.IntegerField(default=0)  # increments with every matching entry mood
-
-    # Define unique templates for each crush
-    memo_templates = {
-        'Dante': [
-            "Hey {username}, I noticed your {hairColour} hair shining while listening to music!",
-            "Your {eyeColour} eyes remind me of the melodies in my heart.",
-            "You always make me think of {mood} songs!"
-        ],
-        'Tristan': [
-            "Hey {username}, your {hairColour} hair looked amazing on the field today!",
-            "Those {eyeColour} eyes sparkled with joy while playing!",
-            "Your {mood} spirit makes every game exciting!"
-        ],
-        'Raphael': [
-            "Hey {username}, your {hairColour} hair is like a canvas of creativity!",
-            "Those {eyeColour} eyes inspire me to see beauty in art.",
-            "Every brushstroke of your {mood} mood adds color to my day!"
-        ],
-        'Caspian': [
-            "Hey {username}, your {hairColour} hair is always stylish!",
-            "Your {eyeColour} eyes see the world through a fashion lens.",
-            "Your {mood} vibe brings out the best in everyone!"
-        ],
-        'Sebastian': [
-            "Hey {username}, your {hairColour} hair shows off your nerdy charm!",
-            "Those {eyeColour} eyes are filled with curiosity!",
-            "Your {mood} personality makes every conversation enjoyable!"
-        ]
-    }
-
-    def increment_matching_mood_entries(self):
-        self.matchingMoodEntries += 1
-        self.save()
-
-        # Check if the number of matching mood entries triggers a memo (3, 6, 9, etc.)
-        if self.matchingMoodEntries in [3, 6, 9]:
-            self.send_memo()
-
-    def send_memo(self):
-        """
-        Sends a specific memo based on the crush mood and matchingMoodEntries value.
-        """
-        diaries = Diary.objects.all()  # Get all diaries
-        for diary in diaries:
-            locker = Locker.objects.get(diary=diary)
-
-            # Get the appropriate memo template based on current matching mood entries
-            templates = self.memo_templates.get(self.crushName, [])
-            if not templates:
-                return  # No templates found for this crush
-
-            # Determine the template index based on matchingMoodEntries
-            index = (self.matchingMoodEntries // 3) - 1  # 3 -> 0, 6 -> 1, 9 -> 2
-            memo_content = templates[index].format(
-                username=diary.userId.username,
-                hairColour=diary.userId.hairColour,
-                eyeColour=diary.userId.eyeColour,
-                mood=self.mood
-            )
-            memo_title = f"{self.crushName} Memo {self.matchingMoodEntries // 3}"  # Determine the memo number
-            
-            # Create the memo
-            Memo.objects.create(locker=locker, title=memo_title, content=memo_content)
-
-    def __str__(self):
-        return self.crushName
-
-
-

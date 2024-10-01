@@ -18,15 +18,22 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 from diaryapp import views
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 router = routers.DefaultRouter()
 router.register(r'signInDetail', views.SignInDetailViewSet, basename='SignInDetailListCreate')
 router.register(r'users', views.UserViewSet, basename='UserListCreate')
-router.register(r'diaries', views.DiaryViewSet, basename='DiaryListCreate')
-router.register(r'entriesB', views.EntryViewSet, basename='EntryListCreate')
+router.register(r'diary', views.EntryViewSet, basename='EntryListCreate')
+router.register(r'locker', views.MemoViewSet, basename='MemoListCreate') 
+# router.register(r'diaries', views.DiaryViewSet, basename='DiaryListCreate')
+# router.register(r'Locker', views.LockerViewSet, basename='LockerListCreate') 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     # path('api/', include('diaryapp.urls')), 
+    path('admin/', admin.site.urls),
     path('api/', include(router.urls)),  # Include the app's URLs
+    # path('auth/register/', views.CreateUserAPIView.as_view({'post': 'register'}), name='auth_user_create'),
+    # path('auth/login/', views.CustomObtainAuthToken.as_view(), name='auth_user_login'),
+    # path('auth/logout/', views.LogoutUserAPIView.as_view(), name='auth_user_logout'),
 ]
