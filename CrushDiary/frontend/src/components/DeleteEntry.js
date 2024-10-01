@@ -8,7 +8,7 @@ const DeleteEntry = () => {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/diary/${id}`);
+      await axios.delete(`http://127.0.0.1:8000/api/diary/${id}/`);
       console.log('Data deleted');
     } catch (error) {
       console.error('Error deleting data:', error);

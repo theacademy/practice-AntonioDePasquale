@@ -20,7 +20,7 @@ const ReadEntries = () => {
           <li className="entry-item" key={entry.entryId}>
             <span className="entry-info"></span>
             <strong>{entry.title} </strong>  {entry.createdAt} - {entry.mood} | {entry.updatedAt} 
-            <span/>
+            <span/> 
             <span className="entry-content"> Dear Diary, {entry.content} </span>
           </li>
         ))}
@@ -30,7 +30,7 @@ const ReadEntries = () => {
 };
 
 // {entry.diaryId} 
-// {entry.title}
+// {entry.title}c
 // {entry.content} 
 // {entry.mood}
 // {entry.createdAt}

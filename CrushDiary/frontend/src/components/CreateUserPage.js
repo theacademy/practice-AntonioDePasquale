@@ -6,6 +6,7 @@ const CreateUserPage = () => {
         username: '',
         eyeColour: '',
         hairColour: '',
+        email: '', // This will be populated behind the scenes
     });
 
     const [error, setError] = useState('');
@@ -15,8 +16,9 @@ const CreateUserPage = () => {
         // Fetch the SignInDetail for the logged-in user
         const fetchSignInDetail = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/users/'); // Adjust the URL based on your API
-                setFormData((prev) => ({ ...prev, email: response.data.email }));
+                // Adjust the URL to your endpoint for getting the logged-in user's SignInDetail
+                const response = await axios.get('http://127.0.0.1:8000/api/signInDetail/me/'); // Use the correct API endpoint
+                setFormData((prev) => ({ ...prev, email: response.data.email })); // Set the email
             } catch (err) {
                 console.error(err);
                 setError('Error fetching user details.');
@@ -37,7 +39,9 @@ const CreateUserPage = () => {
         e.preventDefault();
         try {
             await axios.post('http://127.0.0.1:8000/api/users/', {
-                ...formData,
+                username: formData.username,
+                eyeColour: formData.eyeColour,
+                hairColour: formData.hairColour,
                 email: formData.email // Include the email in the request body
             });
             setSuccess(true);
@@ -84,7 +88,6 @@ const CreateUserPage = () => {
                         required
                     />
                 </div>
-                {/* No email input required */}
                 <div>
                     <button type='submit'>Create User</button>
                 </div>
@@ -94,4 +97,5 @@ const CreateUserPage = () => {
 };
 
 export default CreateUserPage;
+
 

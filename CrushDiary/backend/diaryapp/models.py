@@ -16,7 +16,7 @@ class User(models.Model):
     # age = models.IntegerField()
     # fashionStyle = models.CharField(max_length=20)
     # crushName =models.CharField(max_length=30)
-    email = models.ForeignKey(SignInDetail, on_delete=models.CASCADE)
+    email = models.OneToOneField(SignInDetail, on_delete=models.CASCADE)  # Changed to OneToOneField
     def __str__(self):
         return self.username
     
