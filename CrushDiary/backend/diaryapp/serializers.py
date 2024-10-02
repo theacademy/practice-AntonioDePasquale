@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User, Diary, Entry, SignInDetail, Locker, Memo 
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 class EntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,10 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 class SignInDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = SignInDetail
-        fields = ['email']  # Include only the email field
-        extra_kwargs = {
-            'password': {'write_only': True}  # Password will not be included in the response
-        }
+        fields = '__all__'
 
 class LockerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,6 +32,10 @@ class MemoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Memo
         fields = '__all__'
+
+class CustomAuthTokenSerializer(AuthTokenSerializer):
+    # You can customize your serializer here if needed
+    pass
 
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()

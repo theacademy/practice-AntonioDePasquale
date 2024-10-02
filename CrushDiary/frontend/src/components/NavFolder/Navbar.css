@@ -1,0 +1,58 @@
+/* Navbar.css */
+/* Body styling */
+body {
+    background-color: #fdf4f8; /* Light pink background */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar container styling */
+.navbar {
+    background-color: #ff77a3; /* Girly pink */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Navbar list styling */
+.navbar-list {
+    list-style-type: none;
+    display: flex;
+    gap: 30px; /* Space between items */
+    justify-content: center; /* Center the list items */
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar item styling */
+.navbar-item {
+    transition: transform 0.2s;
+}
+
+/* Hover effect for navbar items */
+.navbar-item:hover {
+    transform: scale(1.1); /* Slightly increase size on hover */
+}
+
+/* Link styling for the navbar (similar to buttons) */
+.navbar-item a {
+    text-decoration: none;
+    color: white; /* Link text color */
+    font-size: 1.2rem;
+    padding: 10px 20px; /* Adjust padding to be more button-like */
+    border-radius: 25px; /* Make the links rounded like buttons */
+    background: linear-gradient(45deg, #ff007f, #ff99c8); /* Gradient background */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for the links */
+.navbar-item a:hover {
+    background: linear-gradient(45deg, #ff99c8, #ff007f); /* Reverse the gradient on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+/* Optional: Add focus effect for accessibility */
+.navbar-item a:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 5px rgba(255, 0, 127, 0.5); /* Add glow effect */
+}

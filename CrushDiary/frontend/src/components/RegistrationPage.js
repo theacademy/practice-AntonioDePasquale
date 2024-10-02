@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const RegistrationPage = () => {
@@ -6,6 +7,7 @@ const RegistrationPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,35 +29,42 @@ const RegistrationPage = () => {
 
     return (
         <div className='registration-page'>
-            <h1>Registration</h1>
+            <h1>Register</h1>
             {error && <div className='error'>{error}</div>}
-            {success && <div className='success'>Sign-in detail created successfully!</div>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+            {success ? (
+                <div className='success'>
+                    Registration successful!
+                    <button onClick={() => navigate('/login')}>Go to Login</button>
                 </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type='password'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <button type='submit'>Register</button>
-                </div>
-            </form>
+            ) : (
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label>Email:</label>
+                        <input
+                            type='email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label>Password:</label>
+                        <input
+                            type='password'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <button type='submit'>Register</button>
+                    </div>
+                </form>
+            )}
         </div>
     );
 };
+
 
 export default RegistrationPage;
 

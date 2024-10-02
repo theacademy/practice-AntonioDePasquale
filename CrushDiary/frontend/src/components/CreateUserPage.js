@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const CreateUserPage = () => {
+    const { token } = useAuth();  // Get the logged-in user's email
+
     const [formData, setFormData] = useState({
+        user_id: token.user_id,
         username: '',
         eyeColour: '',
         hairColour: '',
-        email: '', // This will be populated behind the scenes
+        email: token.email,
+        //email: userEmail, // This will be populated behind the scenes
     });
 
     const [error, setError] = useState('');
@@ -16,18 +21,22 @@ const CreateUserPage = () => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            user_id: token.user_id,
+            email: token.email,
+            [name]: value,
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://127.0.0.1:8000/api/users/', {
+            await axios.put('http://127.0.0.1:8000/api/users/', {
+                user_id: token.user_id,
                 username: formData.username,
                 eyeColour: formData.eyeColour,
                 hairColour: formData.hairColour,
-                email: formData.email // Include the email in the request body
+                //email: userEmail // Include the email in the request body
+                email: token.email // formData.email
             });
             setSuccess(true);
             setError('');
@@ -73,16 +82,17 @@ const CreateUserPage = () => {
                         required
                     />
                 </div>
-                <div>
+                {/* <div>
                     <label>Email:</label>
                     <input
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        //value={userEmail}
                         value={formData.email}
                         onChange={handleChange}
+                        //readOnly
                     />
-                </div>
+                </div> */}
                 <div>
                     <button type='submit'>Create User</button>
                 </div>

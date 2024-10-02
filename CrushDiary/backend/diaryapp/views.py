@@ -16,6 +16,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import SignInDetail
 from .serializers import SignInDetailSerializer
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from django.contrib.auth.models import User  # Import User if needed
+from .serializers import CustomAuthTokenSerializer  # Ensure to import your custom serializer
+
 
 class EntryViewSet(viewsets.ModelViewSet):
     queryset = Entry.objects.all()
@@ -24,6 +30,7 @@ class EntryViewSet(viewsets.ModelViewSet):
 class DiaryViewSet(viewsets.ModelViewSet):
     queryset = Diary.objects.all()
     serializer_class = DiarySerializer
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access this view
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -41,20 +48,23 @@ class MemoViewSet(viewsets.ModelViewSet):
     queryset = Memo.objects.all()
     serializer_class = MemoSerializer
 
-class CreateUserAPIView(viewsets.ModelViewSet):
+class CreateUserAPIView(APIView):
     serializer_class = SignUpSerializer
     permission_classes = [AllowAny]
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
-        signin_detail = serializer.save()
-        token, _ = Token.objects.get_or_create(user=signin_detail)
-        return Response(
-            {"token": token.key, "email": signin_detail.email},
-            status=status.HTTP_201_CREATED
-        )
+    def post(self, request):
+            serializer = SignUpSerializer(data=request.data)
+            if serializer.is_valid():
+                signin_detail = serializer.save()
+                user = User.objects.get(email=signin_detail['username'])
+                print(signin_detail) 
+                token, _ = Token.objects.get_or_create(user=signin_detail)
+                return Response({
+                    "token": token.key,
+                    "user_id": user.userId,
+                    "email": user.email,
+                }, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class LogoutUserAPIView(APIView):
     def get(self, request, format=None):
@@ -63,6 +73,8 @@ class LogoutUserAPIView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 class CustomObtainAuthToken(ObtainAuthToken):
+    serializer_class = CustomAuthTokenSerializer  # Use your custom serializer
+
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})

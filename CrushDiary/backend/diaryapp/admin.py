@@ -11,7 +11,7 @@ class EntryAdmin(admin.ModelAdmin):
 
 # Admin configuration for the SignInDetails model
 class SignInDetailAdmin(admin.ModelAdmin):
-    list_display = ('email',)  # Only display the email field
+    list_display = ('email', 'password')  # Only display the email field
     search_fields = ('email',)  # Allow searching by email
 
 # Admin configuration for the User model

@@ -36,3 +36,213 @@
     transform: rotate(360deg);
   }
 }
+
+/* New styles for the application */
+
+/* Set a pink background for all pages */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: rgb(246, 113, 199) ;
+  margin: 0;
+  padding: 0;
+  color: #333; /* Default text color *//* You can change the font family as needed */
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #7766e4; /* Set a consistent heading color */
+}
+
+Specific styles for the Locker page */
+/* .locker-page {
+  background-image: url('./locker.jpg'); /* Ensure the path to locker.jpg is correct */
+  /* background-size: cover; /* Make the background cover the entire area */
+  /* background-position: center; /* Center the image */
+  /* height: 100vh; /* Full height of the viewport */
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+} */ */ */ */ */
+
+
+/* Style for memos in yellow squares */
+.memo-item {
+  background-color: yellow;
+  border: 2px solid #ccc; /* Optional border */
+  border-radius: 10px; /* Optional rounded corners */
+  padding: 15px;
+  margin: 10px 0;
+  width: 90%; /* Responsive width */
+  max-width: 600px; /* Max width */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+}
+
+.memo-item:hover {
+  transform: scale(1.05); /* Scale up on hover */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+/* Style for diary entries in white boxes */
+.entry-item {
+  background-color: white;
+  border: 2px solid #ccc; /* Optional border */
+  border-radius: 10px; /* Optional rounded corners */
+  padding: 15px;
+  margin: 10px 0;
+  width: 90%; /* Responsive width */
+  max-width: 600px; /* Max width */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+}
+
+.entry-item:hover {
+  transform: scale(1.05); /* Scale up on hover */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+
+/* Style for the text in diary entries */
+.entry-content {
+  font-family: 'Cursive', sans-serif; /* Cursive font for diary entries */
+  color: purple; /* Purple text color */
+}
+
+/* Button styles for the home page */
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  margin: 10px;
+  border: none; /* Remove default border */
+  border-radius: 25px; /* Make the buttons rounded */
+  background: linear-gradient(45deg, #ff007f, #ff99c8); /* Gradient background */
+  color: white; /* Text color */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background 0.3s ease, transform 0.3s ease; /* Transition for background color */
+}
+
+/* Hover effect for buttons */
+button:hover {
+  background: linear-gradient(45deg, #ff99c8, #ff007f); /* Reverse the gradient on hover */
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+/* Optional: Add focus effect for accessibility */
+button:focus {
+  outline: none; /* Remove outline */
+  box-shadow: 0 0 5px rgba(255, 0, 127, 0.5); /* Add glow effect */
+}
+
+/* General input styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside the box */
+    border: 2px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+    font-size: 16px; /* Larger font size */
+    color: #333; /* Dark text color */
+}
+
+/* Change border color and shadow on focus */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: #6a5acd; /* Change border color on focus */
+    box-shadow: 0 0 8px rgba(106, 90, 205, 0.6); /* Shadow effect on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Style for placeholder text */
+::placeholder {
+    color: #a9a9a9; /* Light gray placeholder text */
+    font-style: italic; /* Italic style */
+}
+
+/* Navigation Bar Styles */
+.navbar {
+  background-color: #6a5acd; /* Darker purple background */
+  padding: 15px 20px; /* Padding around the navbar */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.nav-links {
+  list-style: none; /* Remove bullet points */
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: center; /* Center the links */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+.nav-links li {
+  margin: 0 20px; /* Spacing between links */
+}
+
+.nav-links a {
+  text-decoration: none; /* Remove underline */
+  color: white; /* White text color */
+  font-size: 18px; /* Font size for links */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+}
+
+/* Hover effect for links */
+.nav-links a:hover {
+  color: #ffd700; /* Change color on hover */
+  text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); /* Add shadow effect */
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .nav-links {
+      flex-direction: column; /* Stack links vertically on smaller screens */
+  }
+  
+  .nav-links li {
+      margin: 10px 0; /* Margin for vertical spacing */
+  }
+}
+
+/* Form element styles */
+.entry-form {
+  background-color: rgba(255, 255, 255, 0.9); /* Light background for the form */
+  padding: 20px; /* Padding around the form */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  max-width: 500px; /* Max width for the form */
+  margin: 20px auto; /* Center the form */
+}
+
+.form-group {
+  margin-bottom: 15px; /* Spacing between form elements */
+}
+
+.form-label {
+  display: block; /* Block display for labels */
+  margin-bottom: 5px; /* Space below labels */
+  font-weight: bold; /* Bold labels */
+  color: #6a5acd; /* Darker purple for labels */
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding inside the box */
+  border: 2px solid #ccc; /* Light gray border */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition */
+  font-size: 16px; /* Larger font size */
+  color: #333; /* Dark text color */
+}
+
+/* Change border color and shadow on focus */
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: #6a5acd; /* Change border color on focus */
+  box-shadow: 0 0 8px rgba(106, 90, 205, 0.6); /* Shadow effect on focus */
+  outline: none; /* Remove default outline */
+}
+
