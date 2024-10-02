@@ -75,14 +75,14 @@ class CustomObtainAuthToken(ObtainAuthToken):
             'email': user.email
         })
     
-class CurrentUserDetailView(APIView):
-    permission_classes = [IsAuthenticated]
+# class CurrentUserDetailView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # Assuming the email is unique and matches the logged-in user
-        sign_in_detail = SignInDetail.objects.get(email=request.user.email)
-        serializer = SignInDetailSerializer(sign_in_detail)
-        return Response(serializer.data)  # This will now return only the email
+#     def get(self, request):
+#         # Assuming the email is unique and matches the logged-in user
+#         sign_in_detail = SignInDetail.objects.get(email=request.user.email)
+#         serializer = SignInDetailSerializer(sign_in_detail)
+#         return Response(serializer.data)  # This will now return only the email
     
 
 # class EntryListCreate(APIView):

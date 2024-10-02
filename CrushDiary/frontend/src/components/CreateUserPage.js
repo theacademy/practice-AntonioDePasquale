@@ -12,21 +12,6 @@ const CreateUserPage = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        // Fetch the SignInDetail for the logged-in user
-        const fetchSignInDetail = async () => {
-            try {
-                // Adjust the URL to your endpoint for getting the logged-in user's SignInDetail
-                const response = await axios.get('http://127.0.0.1:8000/api/signInDetail/me/'); // Use the correct API endpoint
-                setFormData((prev) => ({ ...prev, email: response.data.email })); // Set the email
-            } catch (err) {
-                console.error(err);
-                setError('Error fetching user details.');
-            }
-        };
-        fetchSignInDetail();
-    }, []);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -86,6 +71,16 @@ const CreateUserPage = () => {
                         value={formData.hairColour}
                         onChange={handleChange}
                         required
+                    />
+                </div>
+                <div>
+                    <label>Email:</label>
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
                     />
                 </div>
                 <div>
