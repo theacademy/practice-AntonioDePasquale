@@ -1,56 +1,63 @@
+# admin.py
+
 from django.contrib import admin
-from .models import Entry, Diary, SignInDetail, User, Crush ,Locker, Memo #################################
+from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin
+from .models import (
+    PlayerCharacter,
+    Diary,
+    Crush,
+    Locker,
+    Entry,
+    Memo,
+    CustomUser,
+)
 
+# Define a custom admin for the CustomUser
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser  # Specify your custom user model here
+    list_display = ['username', 'email', 'password']
+    search_fields = ['email', 'username']
+
+# Register your models
+@admin.register(PlayerCharacter)
+class PlayerCharacterAdmin(admin.ModelAdmin):
+    # Display fields in the list view of PlayerCharacter
+    list_display = ('id', 'inGameName', 'user', 'eyeColour', 'hairColour')
+    # Enable search by in-game name or the associated user's username
+    search_fields = ('inGameName', 'user__username')
+
+@admin.register(Diary)
 class DiaryAdmin(admin.ModelAdmin):
-    list_display = ('diaryId', 'author', 'noOfEntries', 'userId')
-    list_display_links = ('diaryId', 'author')
+    # Display fields in the list view of Diary
+    list_display = ('diaryId', 'author', 'playerCharacterId', 'noOfEntries')
+    # Enable search by author's name or player character's in-game name
+    search_fields = ('author', 'playerCharacterId__inGameName')
 
-class EntryAdmin(admin.ModelAdmin):
-    list_display = ('entryId', 'diaryId', 'title', 'content', 'mood', 'createdAt','updatedAt')
-    list_display_links = ('entryId', 'title')
-
-# Admin configuration for the SignInDetails model
-class SignInDetailAdmin(admin.ModelAdmin):
-    list_display = ('email', 'password')  # Only display the email field
-    search_fields = ('email',)  # Allow searching by email
-
-# Admin configuration for the User model
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('userId', 'username','eyeColour','hairColour', 'email')  # Display these fields
-    search_fields = ('username', 'email__email')  # Allow searching by username and email
-
+@admin.register(Crush)
 class CrushAdmin(admin.ModelAdmin):
-    list_display = ('crushId','crushName','mood', 'matchingMoodEntries' )  # Display these fields
-    search_fields = ('username', 'email__email')  # Allow searching by username and email
+    list_display = ('crushName', 'mood', 'matchingMoodEntries')
+    search_fields = ('crushName',)
 
-# Create an inline model for Memo to show them within the Locker
-class MemoInline(admin.TabularInline):################################
-    model = Memo
-    extra = 0  # No extra blank memo forms will be shown
-
-# Customize Locker admin to include the related memos
-# @admin.register(Locker) #########################
+@admin.register(Locker)
 class LockerAdmin(admin.ModelAdmin):
-    list_display = ('lockerId', 'diaryID', 'get_memos')
-    inlines = [MemoInline]  # Inline view for memos related to locker
+    list_display = ('lockerId', 'diaryId')  # You can add more fields if necessary
+    search_fields = ('diaryId',)  # This will allow searching by diary author
 
-    def get_memos(self, obj): ####################
-        """Displays a count of memos in the locker."""
-        # return ", ".join([memo.title for memo in obj.diaryID.memo_set.all()])
-        # return ", ".join([memo.title for memo in obj.memo_set.all()])
-        return ", ".join([memo.title for memo in obj.memos.all()])
-    get_memos.short_description = 'Memos'
+@admin.register(Entry)
+class EntryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'diaryId', 'mood', 'createdAt')
+    search_fields = ('title', 'diaryId__author')
 
-# Optionally, you can also register Memo itself
-# @admin.register(Memo)
-class MemoAdmin(admin.ModelAdmin):################################
-    list_display = ('memoId', 'title', 'content')
+@admin.register(Memo)
+class MemoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'locker')
+    search_fields = ('title',)
 
-# Register your models with the admin site
-admin.site.register(SignInDetail, SignInDetailAdmin)
-admin.site.register(User, UserAdmin)
-admin.site.register(Entry, EntryAdmin)
-admin.site.register(Diary, DiaryAdmin)
-admin.site.register(Crush, CrushAdmin)
-admin.site.register(Locker, LockerAdmin)  #####################################
-admin.site.register(Memo, MemoAdmin) #####################################
+# Register your custom user model with the custom user admin
+User = get_user_model()
+admin.site.register(User, CustomUserAdmin)  # Register the custom user admin class
+
+
+
+
