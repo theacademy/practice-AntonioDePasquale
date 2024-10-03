@@ -47,7 +47,7 @@ class MoodChoicesView(APIView):
 
 class DiaryViewSet(viewsets.ModelViewSet):
     serializer_class = DiarySerializer
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -113,112 +113,29 @@ class RegisterView(generics.CreateAPIView):
     
 class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
+        identifier = request.data.get('identifier')
         password = request.data.get('password')
 
-        user = authenticate(username=username, password=password)
-        if user is None:
-            return Response({"error": "Invalid credentials"}, status=400)
+        user = None
+        try:
+            user = CustomUser.objects.get(email=identifier)
+        except CustomUser.DoesNotExist:
+            try:
+                user = CustomUser.objects.get(username=identifier)
+            except CustomUser.DoesNotExist:
+                return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Attempt to get the player's character and the associated diary
-        player_character = PlayerCharacter.objects.filter(user=user).first()
-        if not player_character:
-            return Response({"error": "No associated player character found"}, status=404)
+        if not user.check_password(password):
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-        diary = Diary.objects.filter(playerCharacterId=player_character).first()
-        diary_id = diary.diaryId if diary else None
-
-        # Create or retrieve the token
         token, created = Token.objects.get_or_create(user=user)
+
+        # Fetch the diary associated with the user (adjust this if your logic is different)
+        diary = Diary.objects.filter(playerCharacterId__user=user).first()
 
         return Response({
             'token': token.key,
             'userId': user.id,
             'email': user.email,
-            'diary_id': diary_id  # Include the diary ID in the response
+            'diaryId': diary.diaryId if diary else None,  # Ensure you handle cases where no diary exists
         })
-    
-# class LoginView(APIView):
-#     def post(self, request):
-#         identifier = request.data.get('identifier')
-#         password = request.data.get('password')
-
-#         # Try to authenticate by username or email
-#         user = authenticate(request, username=identifier, password=password)
-#         if user is None:
-#             try:
-#                 # Try to get user by email if username fails
-#                 user = User.objects.get(email=identifier)
-#                 if user.check_password(password):
-#                     user = authenticate(request, username=user.username, password=password)
-#             except User.DoesNotExist:
-#                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-#         if user is not None:
-#             # Generate token and return response
-#             token = ...  # Generate token here (use Django REST Framework JWT or similar)
-#             return Response({'token': token}, status=status.HTTP_200_OK)
-#         return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-# class LogoutUserAPIView(APIView):
-#     def get(self, request, format=None):
-#         if request.user.is_authenticated:
-#             request.user.auth_token.delete()
-#         return Response(status=status.HTTP_200_OK)
-
-# class CustomAuthToken(APIView):
-#     def post(self, request, *args, **kwargs):
-#         email = request.data.get('email')
-#         password = request.data.get('password')
-
-#         try:
-#             user = User.objects.get(email=email)  # Fetch user by email
-#             if user.check_password(password):  # Verify the password
-#                 token, created = Token.objects.get_or_create(user=user)
-#                 return Response({'token': token.key}, status=status.HTTP_200_OK)
-#             else:
-#                 return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-#         except User.DoesNotExist:
-#             return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-    
-# class CurrentUserDetailView(APIView):
-#     permission_classes = [IsAuthenticated]
-
-#     def get(self, request):
-#         # Assuming the email is unique and matches the logged-in user
-#         sign_in_detail = SignInDetail.objects.get(email=request.user.email)
-#         serializer = SignInDetailSerializer(sign_in_detail)
-#         return Response(serializer.data)  # This will now return only the email
-    
-
-# class EntryListCreate(APIView):
-#     def get(self, request):
-#         entries = Entry.objects.all()
-#         serializer = EntrySerializer(entries, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = EntrySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class EntryDetail(APIView):
-#     def get(self, request, pk):
-#         try:
-#             entry = Entry.objects.get(pk=pk)
-#             serializer = EntrySerializer(entry)
-#             return Response(serializer.data)
-#         except Entry.DoesNotExist:
-#             return Response(status=status.HTTP_404_NOT_FOUND)
-
-# def CreateMemo(self,User,Crush):
-
-#     f
-#     name=User.name
-#     eyeColour=User.eyeColour
-#     hairColour=User.hairColour
-#     Crush.matching

@@ -19,9 +19,8 @@ from django.urls import path, include
 from rest_framework import routers
 from diaryapp import views
 from rest_framework.authtoken.views import obtain_auth_token
-from diaryapp.views import CustomObtainAuthToken  # Ensure this is uncommented
+from diaryapp.views import CustomObtainAuthToken  # Ensure this is uncommentedS
 
-from diaryapp.views import MoodChoicesView  # Ensure this is uncommented in views.py if you want to include the mood choices API endpoint. You might also need to import the necessary models and serializers.
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, basename='UserListCreate')
@@ -35,7 +34,6 @@ urlpatterns = [
     path('auth/register/', views.RegisterView.as_view(), name='register'),  # Ensure this is the correct register view
     path('api/', include(router.urls)),
     path('auth/login/', CustomObtainAuthToken.as_view(), name='custom_api_token_auth'),  # Uncommented the login view
-    path('mood-choices/', MoodChoicesView.as_view(), name='mood-choices'),
 ]
 
 

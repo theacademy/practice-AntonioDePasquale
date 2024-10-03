@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const ReadMemos = () => {
   const [memos, setMemos] = useState([]);
-  const token = localStorage.getItem('token'); // Get token from localStorage
-
+  // const token = localStorage.getItem('token'); // Get token from localStorage
+  const { token, user } = useAuth(); 
 
   useEffect(() => {
     const fetchMemos = async () => {
-        const response = await axios.get('http://127.0.0.1:8000/api/locker/', {
-          headers: { 'Authorization': `Token ${token}` } // Include token in headers
-        });
+        const response = await axios.get('http://127.0.0.1:8000/api/memos/'
+          // , {headers: { 'Authorization': `Token ${token}` }}
+        );
         setMemos(response.data);
       };
       fetchMemos();
-    }, [token]);
+    }, 
+    // [token]);
+    []);
+
 
   return (
     <div className="memo-container">

@@ -4,27 +4,49 @@ import axios from 'axios';
 
 const RegistrationPage = () => {
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    
+    // Default values for additional fields
+    const [inGameName] = useState('Tony'); // Default value
+    const [eyeColour] = useState('Blue'); // Default value
+    const [hairColour] = useState('Brown'); // Default value
+    
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+    const [loading, setLoading] = useState(false); // Loading state
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Start loading
 
-        axios.post('http://127.0.0.1:8000/api/signInDetail/', {
-            email: email,
-            password: password
-        })
-        .then(response => {
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/auth/register/', {
+                email,
+                username,
+                password,
+                inGameName,
+                eyeColour,
+                hairColour
+            });
+
+            // Handle success response
             setSuccess(true);
-            setError('');
-            // Optionally, redirect to login or the next step
-        })
-        .catch(err => {
-            setError('Error creating SignInDetail. Please try again.');
+            setError(''); // Clear any previous errors
+            console.log("Response:", response.data); // Log the response for debugging
+            // Clear input fields
+            setEmail('');
+            setUsername('');
+            setPassword('');
+        } catch (err) {
+            // Handle error response
+            const errorMessage = err.response?.data || 'Error creating account. Please try again.';
+            setError(typeof errorMessage === 'object' ? JSON.stringify(errorMessage) : errorMessage);
             setSuccess(false);
-        });
+        } finally {
+            setLoading(false); // End loading
+        }
     };
 
     return (
@@ -33,7 +55,7 @@ const RegistrationPage = () => {
             {error && <div className='error'>{error}</div>}
             {success ? (
                 <div className='success'>
-                    Registration successful!
+                    Registration successful! You can now log in with your email: {email}
                     <button onClick={() => navigate('/login')}>Go to Login</button>
                 </div>
             ) : (
@@ -48,6 +70,15 @@ const RegistrationPage = () => {
                         />
                     </div>
                     <div>
+                        <label>Username:</label>
+                        <input
+                            type='text'
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
                         <label>Password:</label>
                         <input
                             type='password'
@@ -56,8 +87,11 @@ const RegistrationPage = () => {
                             required
                         />
                     </div>
+                    {/* Hidden fields for in-game name, eye colour, and hair colour */}
                     <div>
-                        <button type='submit'>Register</button>
+                        <button type='submit' disabled={loading}>
+                            {loading ? 'Registering...' : 'Register'}
+                        </button>
                     </div>
                 </form>
             )}
@@ -65,71 +99,4 @@ const RegistrationPage = () => {
     );
 };
 
-
 export default RegistrationPage;
-
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-
-// const RegistrationPage = () => {
-//     const [email, setEmail] = useState('');
-//     const [password, setPassword] = useState('');
-//     const navigate = useNavigate();
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-
-//         try {
-//             const response = await fetch("http://127.0.0.1:8000/api/signInDetail/", {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify({ username: email, password: password }),
-//             });
-
-//             if (!response.ok) {
-//                 throw new Error("Registration Failed");
-//             }
-
-//             const data = await response.json();
-//             // localStorage.setItem('token', data.token);
-
-//             navigate('/diary');
-//         } catch (err) {
-//             console.error('Registration error:', err);
-//         }
-//     }
-
-//     return (
-//         <div>
-//             <h1>Registration Page</h1>
-//             <form onSubmit={handleSubmit}>
-//                 <label>
-//                     Email:
-//                     <input 
-//                         type="email"
-//                         value={email}
-//                         onChange={(e) => setEmail(e.target.value)}
-//                         required
-//                     />
-//                 </label>
-//                 <br />
-//                 <label>
-//                     Password:
-//                     <input 
-//                         type="password"
-//                         value={password}
-//                         onChange={(e) => setPassword(e.target.value)}
-//                         required
-//                     />
-//                 </label>
-//                 <br />
-//                 <input type="submit" value="Register" />
-//             </form>
-//             <p>Already have an account? <a href="/login">Login</a></p>
-//         </div>
-//     )
-// }
-
-// export default RegistrationPage;

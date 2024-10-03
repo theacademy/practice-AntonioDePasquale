@@ -7,7 +7,7 @@ const DeleteEntry = ({ refreshEntries }) => {  // Accept refreshEntries as a pro
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/diary/${id}/`);
+      await axios.delete(`http://127.0.0.1:8000/api/entries/${id}/`);
       console.log('Data deleted');
       refreshEntries();  // Call refreshEntries to update the list of entries
       setId('');  // Clear the input field after deletion

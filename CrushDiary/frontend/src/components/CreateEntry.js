@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useAuth } from './AuthContext'; // Import the useAuth hook
 
-const CreateEntry = ({ refreshEntries }) => {  // Accept refreshEntries as a prop
+const CreateEntry = ({ onSubmit }) => {
+    const { user } = useAuth();  // Get the user object from context
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [mood, setMood] = useState('Musical');
@@ -11,24 +13,33 @@ const CreateEntry = ({ refreshEntries }) => {  // Accept refreshEntries as a pro
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios.post('http://127.0.0.1:8000/api/diary/', {
+        // Ensure diaryId is available
+        if (!user || !user.diaryId) {
+            setError('Diary ID not found. Please log in again.');
+            return;
+        }
+
+        // Use the diaryId from the logged-in user
+        axios.post('http://127.0.0.1:8000/api/entries/', {
             title: title,
             content: content,
             mood: mood,
-            diaryId: 1  // Make sure to pass the correct diaryId
+            diaryId: user.diaryId  // Use the diaryId from the context
         })
         .then(response => {
             setSuccess(true);
             setError('');
-            refreshEntries();  // Call the function to refresh entries
             // Optionally clear the input fields after submission
             setTitle('');
             setContent('');
             setMood('Musical');
+            console.log("added entry")
+            return { response: response.da};
         })
         .catch(err => {
             setError('Error creating Diary Entry. Please try again.');
             setSuccess(false);
+            console.log("failed to add entry")
         });
     };
 

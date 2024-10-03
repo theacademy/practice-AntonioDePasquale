@@ -50,18 +50,19 @@ body {
 h1, h2, h3, h4, h5, h6 {
   color: #7766e4; /* Set a consistent heading color */
 }
-
-Specific styles for the Locker page */
-/* .locker-page {
-  background-image: url('./locker.jpg'); /* Ensure the path to locker.jpg is correct */
-  /* background-size: cover; /* Make the background cover the entire area */
-  /* background-position: center; /* Center the image */
-  /* height: 100vh; /* Full height of the viewport */
-  /* display: flex;
+/* 
+Specific styles for the Locker page */ */
+.locker-page {
+  background-image: url('./pics/locker.jpg'); 
+  /* background-image: url(${process.env.PUBLIC_URL}/locker.jpg);  */
+  background-size: cover; /* Make the background cover the entire area */
+  background-position: center; /* Center the image */
+  height: 100vh; /* Full height of the viewport */
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-} */ */ */ */ */
+} 
 
 
 /* Style for memos in yellow squares */
@@ -80,29 +81,7 @@ Specific styles for the Locker page */
   transform: scale(1.05); /* Scale up on hover */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow on hover */
 }
-/* Style for diary entries in white boxes */
-.entry-item {
-  background-color: white;
-  border: 2px solid #ccc; /* Optional border */
-  border-radius: 10px; /* Optional rounded corners */
-  padding: 15px;
-  margin: 10px 0;
-  width: 90%; /* Responsive width */
-  max-width: 600px; /* Max width */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
-}
 
-.entry-item:hover {
-  transform: scale(1.05); /* Scale up on hover */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow on hover */
-}
-
-
-/* Style for the text in diary entries */
-.entry-content {
-  font-family: 'Cursive', sans-serif; /* Cursive font for diary entries */
-  color: purple; /* Purple text color */
-}
 
 /* Button styles for the home page */
 button {
@@ -246,3 +225,98 @@ textarea:focus {
   outline: none; /* Remove default outline */
 }
 
+/* Memo item - Yellow Post-it Note Style */
+.memo-item {
+  background-color: #fcf660; /* Brighter yellow for the post-it note */
+  border: 1px solid #cccccc; /* Light gray border */
+  border-radius: 10px; /* Rounded corners for a softer look */
+  padding: 15px;
+  margin: 10px 0;
+  width: 90%; /* Responsive width */
+  max-width: 600px; /* Max width */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Add shadow for floating effect */
+  transform: rotate(-2deg); /* Slight rotation for casual note look */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+}
+
+/* Hover effect to make it more dynamic */
+.memo-item:hover {
+  transform: rotate(0deg) scale(1.05); /* Straighten and enlarge slightly on hover */
+  box-shadow: 5px 10px 25px rgba(0, 0, 0, 0.3); /* Deeper shadow on hover */
+}
+
+/* Memo title style */
+.memo-title {
+  font-family: 'Permanent Marker', cursive; /* Handwritten style for the title */
+  color: #333; /* Dark text color for readability */
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Memo content style */
+.memo-content {
+  font-family: 'Dancing Script', cursive; /* Cursive font for memo content */
+  color: #333; /* Dark text color */
+  font-size: 18px; /* Slightly larger for readability */
+  line-height: 1.6; /* Increase line height for better readability */
+  margin-top: 5px;
+}
+/* Style for diary entries to look like lined pages */
+.entry-item {
+  background: repeating-linear-gradient(
+    white,
+    white 35px,
+    #d3d3d3 36px /* Light gray lines representing notebook lines */
+  );
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px 0;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  font-family: 'Dancing Script', cursive; /* Handwriting-style font */
+  font-size: 18px; /* Slightly larger text */
+  line-height: 36px; /* Space text to align with lines */
+  position: relative;
+}
+
+
+
+/* Style for the entry content */
+.entry-content {
+  font-family: 'Dancing Script', cursive;
+  color: #4b0082; /* Dark purple text */
+  margin-top: 10px;
+}
+
+/* Title of the entry */
+.entry-item strong {
+  font-family: 'Permanent Marker', cursive; /* Handwritten title font */
+  font-size: 22px;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* The container holding the list of entries */
+.list-container {
+  padding: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.list-title {
+  font-family: 'Poppins', sans-serif; /* Regular, easy-to-read font for headings */
+  font-size: 28px;
+  color: #6a5acd; /* Same purple as the sidebar line */
+  margin-bottom: 20px;
+}
+
+/* Error message styling */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+  text-align: center;
+}
