@@ -1,10 +1,84 @@
+
+
 .App {
   text-align: center;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
+  flex-direction: column; /* Stack items vertically */
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 40px;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.login-page form {
+  margin: 100px auto;
+  max-width: 600px;
+  width: 100%;
+  padding: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.registration-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 50px auto;
+  max-width: 600px;
+  width: 100%;
+  padding: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 8px;
+}
+
+.home-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.character-container {
+  margin: 20px 0;
+}
+
+.animated-character {
+  width: 200px; /* Adjust size as needed */
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -47,13 +121,38 @@ body {
   padding: 0;
   color: #333; /* Default text color *//* You can change the font family as needed */
 }
-h1, h2, h3, h4, h5, h6 {
+h2, h3, h4, h5, h6 {
   color: #7766e4; /* Set a consistent heading color */
 }
+@keyframes colorChange {
+  0% { color: #ff007f; }
+  25% { color: #ff99c8; }
+  50% { color: #ffb3ff; }
+  75% { color: #f7c6ff; }
+  100% { color: #7766e4; }
+}
+
+h1 {
+  font-family: 'Permanent Marker', cursive; /* Graffiti-style font */
+  font-size: 48px; /* Big bold text */
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff007f, #ff99c8, #ffb3ff, #f7c6ff, #7766e4, #ff66b2); /* Rainbow gradient */
+  -webkit-background-clip: text; /* Clip background to text */
+  color: transparent; /* Make the text itself transparent so it shows the gradient */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+  display: inline-block;
+  margin-bottom: 20px;
+  text-align: center;
+  
+  animation: colorChange 3s infinite;
+  letter-spacing: 2px; /* Slight space between letters for that bubble effect */
+}
 /* 
-Specific styles for the Locker page */ */
+Specific styles for the Locker page */ 
 .locker-page {
-  background-image: url('./pics/locker.jpg'); 
+  /* background-image: url('./locker.jpg'); */
+  background-image: url('../public/locker.jpg');
+  /* background-image: url('/locker.jpg');  */
   /* background-image: url(${process.env.PUBLIC_URL}/locker.jpg);  */
   background-size: cover; /* Make the background cover the entire area */
   background-position: center; /* Center the image */
@@ -63,24 +162,6 @@ Specific styles for the Locker page */ */
   align-items: center;
   justify-content: center;
 } 
-
-
-/* Style for memos in yellow squares */
-.memo-item {
-  background-color: yellow;
-  border: 2px solid #ccc; /* Optional border */
-  border-radius: 10px; /* Optional rounded corners */
-  padding: 15px;
-  margin: 10px 0;
-  width: 90%; /* Responsive width */
-  max-width: 600px; /* Max width */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
-}
-
-.memo-item:hover {
-  transform: scale(1.05); /* Scale up on hover */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow on hover */
-}
 
 
 /* Button styles for the home page */
@@ -139,37 +220,7 @@ textarea:focus {
     font-style: italic; /* Italic style */
 }
 
-/* Navigation Bar Styles */
-.navbar {
-  background-color: #6a5acd; /* Darker purple background */
-  padding: 15px 20px; /* Padding around the navbar */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
 
-.nav-links {
-  list-style: none; /* Remove bullet points */
-  display: flex; /* Flexbox for horizontal layout */
-  justify-content: center; /* Center the links */
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
-}
-
-.nav-links li {
-  margin: 0 20px; /* Spacing between links */
-}
-
-.nav-links a {
-  text-decoration: none; /* Remove underline */
-  color: white; /* White text color */
-  font-size: 18px; /* Font size for links */
-  transition: color 0.3s ease; /* Smooth transition for color change */
-}
-
-/* Hover effect for links */
-.nav-links a:hover {
-  color: #ffd700; /* Change color on hover */
-  text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); /* Add shadow effect */
-}
 
 /* Responsive styling */
 @media (max-width: 768px) {
@@ -224,19 +275,23 @@ textarea:focus {
   box-shadow: 0 0 8px rgba(106, 90, 205, 0.6); /* Shadow effect on focus */
   outline: none; /* Remove default outline */
 }
-
+/* Style for memos in yellow squares */
 /* Memo item - Yellow Post-it Note Style */
 .memo-item {
-  background-color: #fcf660; /* Brighter yellow for the post-it note */
-  border: 1px solid #cccccc; /* Light gray border */
-  border-radius: 10px; /* Rounded corners for a softer look */
+  background-color: #fcf660;
+  border: 1px solid #cccccc;
+  border-radius: 10px;
   padding: 15px;
   margin: 10px 0;
-  width: 90%; /* Responsive width */
-  max-width: 600px; /* Max width */
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Add shadow for floating effect */
-  transform: rotate(-2deg); /* Slight rotation for casual note look */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transition for hover effects */
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  transform: rotate(-2deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /* Hover effect to make it more dynamic */
@@ -255,11 +310,19 @@ textarea:focus {
 
 /* Memo content style */
 .memo-content {
-  font-family: 'Dancing Script', cursive; /* Cursive font for memo content */
+  font-family: 'Comic Sans MS', sans-serif; /* Bubbly, playful font */
   color: #333; /* Dark text color */
   font-size: 18px; /* Slightly larger for readability */
-  line-height: 1.6; /* Increase line height for better readability */
+  line-height: 1.8; /* Increase line height for better readability */
   margin-top: 5px;
+}
+
+.memo-list {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Horizontally center the memo list */
+  align-items: center;
+  flex-direction: column; /* Stack memos vertically */
 }
 /* Style for diary entries to look like lined pages */
 .entry-item {
@@ -320,3 +383,55 @@ textarea:focus {
   margin-top: 10px;
   text-align: center;
 }
+
+.locker-page h2 {
+  font-size: 3em; /* Increase the size */
+  font-weight: bold; /* Make the font bold */
+  text-align: center; /* Center the text */
+  color: #fff; /* White text */
+  background: linear-gradient(45deg, #ff69b4, #ffa500, #ffff00, #32cd32, #00ffff, #8a2be2, #ff69b4);
+  -webkit-background-clip: text; /* Clip the background to the text */
+  -webkit-text-fill-color: transparent; /* Transparent fill */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Add shadow for contrast */
+  font-family: 'Permanent Marker', cursive; /* Bubble-style font */
+  padding: 10px;
+}
+
+.locker-page h2:hover {
+  transform: scale(1.1); /* Slight grow effect on hover */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Keyframes for the sparkle effect */
+@keyframes sparkle {
+  0% {
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3), 0 0 10px #ff99c8, 0 0 20px #ff66b2;
+  }
+  100% {
+    text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3), 0 0 20px #ff66b2, 0 0 30px #ffb3ff;
+  }
+}
+
+.home-container h1 {
+  display: block; /* Ensure h1 takes its own line */
+  margin-bottom: 20px; /* Space between title and buttons */
+}
+
+.home-container {
+  text-align: center; /* Center the content */
+}
+
+.home-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  align-items: center; /* Center buttons horizontally */
+  gap: 10px; /* Space between the buttons */
+}
+
+.entry-list {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margin */
+}
+
+

@@ -51,7 +51,9 @@ const RegistrationPage = () => {
 
     return (
         <div className='registration-page'>
+            <hr/>
             <h1>Register</h1>
+            <hr/>
             {error && <div className='error'>{error}</div>}
             {success ? (
                 <div className='success'>
@@ -88,6 +90,7 @@ const RegistrationPage = () => {
                         />
                     </div>
                     {/* Hidden fields for in-game name, eye colour, and hair colour */}
+                    <hr/>
                     <div>
                         <button type='submit' disabled={loading}>
                             {loading ? 'Registering...' : 'Register'}

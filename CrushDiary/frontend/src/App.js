@@ -15,25 +15,36 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Navbar/>
-        <div className="home-container" style={{ textAlign: 'center', marginTop: '20%' }}>
-          <h1>Welcome to the Crush Diary</h1>
-          <Link to="/register">
-            <button style={{ padding: '10px 20px', fontSize: '18px', margin: '10px' }}>Register</button>
-          </Link>
-          <Link to="/login">
-            <button style={{ padding: '10px 20px', fontSize: '18px', margin: '10px' }}>Login</button>
-          </Link>
+        <div className="page-container">
+          <Navbar />
+          <div className="content-wrapper">
+            <Routes>
+              <Route path="/" element={
+                <div className="home-container">
+                  <h1>Welcome to the Crush Diary</h1>
+                  <div className="character-container">
+                    <img src="anime-girl.jpg" alt="Animated character" className="animated-character" />
+                  </div>
+                  <div className="home-buttons">
+                    {/* <Link to="/register">
+                    <button>Register</button>
+                    </Link> */}
+                    <Link to="/login">
+                    <button>Login</button>
+                    </Link>
+                  </div>
+                  {/* <h2>Write in your diary...your dreams may actually come true!</h2> */}
+                </div>
+              } />
+              <Route path="/" exact element={<h2>Write in your diary...your dreams may actually come true!</h2>} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/create-user" element={<CreateUserPage />} />
+              <Route path="/diary" element={<DiaryPage />} />
+              <Route path="/locker" element={<LockerPage />} />
+            </Routes>
+          </div>
         </div>
-
-        <Routes>
-          <Route path="/" exact element={<h2>Write in your diary...your dreams may actually come true!</h2>} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/create-user" element={<CreateUserPage />} />
-          <Route path="/diary" element={<DiaryPage />} />
-          <Route path="/locker" element={<LockerPage />} />
-        </Routes>
       </Router>
     </AuthProvider>
   );
